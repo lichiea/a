@@ -26,24 +26,42 @@ vec3 white(1.0, 1.0, 1.0), blue(0.0, 0.0, 1.0), red(1.0, 0.0, 0.0), yellow(1.0, 
 vector<vec3> col = {white, blue, red, yellow, fiolet };
 
 // КЛАСС ДЛЯ ПРЕДСТАВЛЕНИЯ ОДНОГО ГРАФИЧЕСКОГО ОБЪЕКТА
-class GraphicObject
-{
+class GraphicObject{
 public:
     // Конструктор
-    GraphicObject();
+    GraphicObject() {};
     // Установка и получение позиции объекта
-    void setPosition(vec3 position);
-    vec3 getPosition();
+    void setPosition(vec3 position_temp){
+        position = position_temp;
+        recalculateModelMatrix();
+    };
+
+    vec3 getPosition() { return position; };
     // Установка и получения угла поворота в градусах
     // поворот осуществляется в горизонтальной плоскости
     // вокруг оси Oy по часовой стрелке
-    void setAngle(float grad);
-    float getAngle();
+    void setAngle(float grad) {
+        angle=grad;
+        recalculateModelMatrix();
+    };
+    float getAngle() { return angle; };
     // Установка текущего цвета объекта
-    void setСolor(vec3 color);
-    vec3 getColor();
+    void setСolor(vec3 color_temp) {
+        color = color_temp;
+    };
+    vec3 getColor() { return color; };
     // Вывести объект
-    void draw();
+    void draw() {
+
+        vec3 c = getColor();
+        glColor3f(c.r,c.g,c.b);
+        glPushMatrix();
+        glMultMatrixf(modelMatrix);
+        glutWireTeapot(1.0);
+        glPopMatrix();
+
+    };
+    ~GraphicObject() {};
 private:
     // Позиция объекта в глобальной системе координат
     vec3 position;
@@ -55,8 +73,18 @@ private:
     GLfloat modelMatrix[16];
 private:
     // расчет матрицы modelMatrix на основе position и angle
-    void recalculateModelMatrix();
+    void recalculateModelMatrix() {
+        modelMatrix[0] = -1.0; modelMatrix[1] = 0.0; modelMatrix[2] = 0.0; modelMatrix[3] = 0.0;
+        modelMatrix[4] = 0.0; modelMatrix[5] = 1.0; modelMatrix[6] = 0.0; modelMatrix[7] = 0.0;
+        modelMatrix[8] = 0.0; modelMatrix[9] = 0.0; modelMatrix[10] = -1.0; modelMatrix[11] = 0.0;
+        for (int q = 12; q < 15; q++) {
+            modelMatrix[q] = position[q-12];
+        }
+        modelMatrix[15] = 1.0;
+    };
 };
+
+vector<GraphicObject> graphicObjects;
 
 // функция, вызываемая при изменении размеров окна
 void reshape(int w, int h)
@@ -92,9 +120,9 @@ void display(void)
   //  glutWireTeapot(1.0);
 
 // выводим все графические объекты
-//    for (auto& go : graphicObjects) {
-  //      go.draw();
- //   }
+    for (auto& go : graphicObjects) {
+        go.draw();
+    }
 
     // Матрица модели правого чайника, в точке - (4,0,0)
     GLfloat modelMatrix0[16] = {//синий
@@ -103,50 +131,50 @@ void display(void)
     0.0, 0.0, -1.0, 0.0, // ось Oz
     4.0, 0.0, 0.0, 1.0 // позиция объекта (начало системы координат)
     };
-    // Матрица модели левого чайника, в точке - (-4,0,0)
-    GLfloat modelMatrix1[16] = {//красный
-    1.0, 0.0, 0.0, 0.0, // ось Ox
-    0.0, 1.0, 0.0, 0.0, // ось Oy
-    0.0, 0.0, 1.0, 0.0, // ось Oz
-    -4.0, 0.0, 0.0, 1.0 // позиция объекта (начало системы координат)
-    };
-    GLfloat modelMatrix2[16] = {//зелёный
-    0.0, 0.0, -1.0, 0.0, // ось Ox
-    0.0, 1.0, 0.0, 0.0, // ось Oy
-    -1.0, 0.0, 0.0, 0.0, // ось Oz
-    0.0, 0.0, 4.0, 1.0 // позиция объекта (начало системы координат)
-    };
-    // Матрица модели левого чайника, в точке - (-4,0,0)
-    GLfloat modelMatrix3[16] = {//белый
-    0.0, 0.0, 1.0, 0.0, // ось Ox
-    0.0, 1.0, 0.0, 0.0, // ось Oy
-    1.0, 0.0, 0.0, 0.0, // ось Oz
-    0.0, 0.0, -4.0, 1.0 // позиция объекта (начало системы координат)
-    };
+    //// Матрица модели левого чайника, в точке - (-4,0,0)
+    //GLfloat modelMatrix1[16] = {//красный
+    //1.0, 0.0, 0.0, 0.0, // ось Ox
+    //0.0, 1.0, 0.0, 0.0, // ось Oy
+    //0.0, 0.0, 1.0, 0.0, // ось Oz
+    //-4.0, 0.0, 0.0, 1.0 // позиция объекта (начало системы координат)
+    //};
+    //GLfloat modelMatrix2[16] = {//зелёный
+    //0.0, 0.0, -1.0, 0.0, // ось Ox
+    //0.0, 1.0, 0.0, 0.0, // ось Oy
+    //-1.0, 0.0, 0.0, 0.0, // ось Oz
+    //0.0, 0.0, 4.0, 1.0 // позиция объекта (начало системы координат)
+    //};
+    //// Матрица модели левого чайника, в точке - (-4,0,0)
+    //GLfloat modelMatrix3[16] = {//белый
+    //0.0, 0.0, 1.0, 0.0, // ось Ox
+    //0.0, 1.0, 0.0, 0.0, // ось Oy
+    //1.0, 0.0, 0.0, 0.0, // ось Oz
+    //0.0, 0.0, -4.0, 1.0 // позиция объекта (начало системы координат)
+    //};
     // вывод правого нижнего чайника
     glColor3f(1, 0, 0);
     glPushMatrix();
     glMultMatrixf(modelMatrix0);
     glutWireTeapot(1.0);
     glPopMatrix();
-    // вывод левого верхнего чайника
-    glColor3f(0, 0, 1);
-    glPushMatrix();
-    glMultMatrixf(modelMatrix1);
-    glutWireTeapot(1.0);
-    glPopMatrix();
-    // вывод левого нижнего чайника
-    glColor3f(0, 1, 0);
-    glPushMatrix();
-    glMultMatrixf(modelMatrix2);
-    glutWireTeapot(1.0);
-    glPopMatrix();
-    // вывод правого верхнего чайника
-    glColor3f(1, 1, 1);
-    glPushMatrix();
-    glMultMatrixf(modelMatrix3);
-    glutWireTeapot(1.0);
-    glPopMatrix();
+    //// вывод левого верхнего чайника
+    //glColor3f(0, 0, 1);
+    //glPushMatrix();
+    //glMultMatrixf(modelMatrix1);
+    //glutWireTeapot(1.0);
+    //glPopMatrix();
+    //// вывод левого нижнего чайника
+    //glColor3f(0, 1, 0);
+    //glPushMatrix();
+    //glMultMatrixf(modelMatrix2);
+    //glutWireTeapot(1.0);
+    //glPopMatrix();
+    //// вывод правого верхнего чайника
+    //glColor3f(1, 1, 1);
+    //glPushMatrix();
+    //glMultMatrixf(modelMatrix3);
+    //glutWireTeapot(1.0);
+    //glPopMatrix();
 
 
     // смена переднего и заднего буферов
@@ -188,7 +216,8 @@ void keyboardFunc(unsigned char key, int x, int y)
     if (i == 5) i = 0;
 };
 
-//vector<GraphicObject> graphicObjects;
+// список графических объектов
+
 
 void main(int argc, char** argv)
 {
@@ -219,14 +248,29 @@ void main(int argc, char** argv)
 
     // ИНИЦИАЛИЗАЦИЯ ДАННЫХ, НЕОБХОДИМЫХ ДЛЯ РАБОТЫ ПРОГРАММЫ:
     // инициализация графических объектов
- //  GraphicObject tempGraphicObject;
+    GraphicObject tempGraphicObject;
     // 1 -----------------------------------------
-  //  tempGraphicObject.setPosition(vec3(5, 0, 0));
- //   tempGraphicObject.setAngle(180);
- //   tempGraphicObject.setСolor(vec3(1, 0, 0));
-  //  graphicObjects.push_back(tempGraphicObject);
+    tempGraphicObject.setPosition(vec3(5, 0, 0));
+    tempGraphicObject.setAngle(45);
+    tempGraphicObject.setСolor(vec3(1, 0, 0));
+    graphicObjects.push_back(tempGraphicObject);
     // 2 -----------------------------------------
-
+    tempGraphicObject.setPosition(vec3(-5, 0, 0));
+    tempGraphicObject.setAngle(135);
+    tempGraphicObject.setСolor(vec3(0, 0, 1));
+    graphicObjects.push_back(tempGraphicObject);
+    // 3 -----------------------------------------
+    tempGraphicObject.setPosition(vec3(0, 0, 5));
+    tempGraphicObject.setAngle(225);
+    tempGraphicObject.setСolor(vec3(1, 1, 1));
+    graphicObjects.push_back(tempGraphicObject);
     // основной цикл обработки сообщений ОС
+    // 4 -----------------------------------------
+    tempGraphicObject.setPosition(vec3(0, 0, -5));
+    tempGraphicObject.setAngle(315);
+    tempGraphicObject.setСolor(vec3(0, 1, 0));
+    graphicObjects.push_back(tempGraphicObject);
+
+
     glutMainLoop();
 };
