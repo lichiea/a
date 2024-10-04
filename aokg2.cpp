@@ -18,12 +18,14 @@ using namespace glm;
 using namespace std;
 
 void smena(double);
+void gradient(double);
 
 int i = 0;
 int a = 0;
+double k = 0;
 
-vec3 white(1.0, 1.0, 1.0), blue(0.0, 0.0, 1.0), red(1.0, 0.0, 0.0), yellow(1.0, 1.0, 0.0), fiolet(0.5, 0.0, 1.0), grad(0.0,0.0,0.0);
-vector<vec3> col = {white, blue, red, yellow, fiolet };
+vec3 white(1.0, 1.0, 1.0), blue(0.0, 0.0, 1.0), red(1.0, 0.0, 0.0), yellow(1.0, 1.0, 0.0), fiolet(0.5, 0.0, 1.0), grad(1.0, 1.0, 1.0),grad1(1.0, 1.0, 1.0),grad2(0.0, 0.0, 1.0);
+vector<vec3> col = { white, blue, red, yellow, fiolet };
 
 
 // функция, вызываемая при изменении размеров окна
@@ -54,8 +56,6 @@ void display(void)
     glLoadIdentity();
     gluLookAt(5, 5, 7.5, 0, 0, 0, 0, 1, 0);
 
-    // выводим объект - красный (1,0,0) чайник
-  
     glColor3f(grad.r, grad.g, grad.b);
     glutWireTeapot(1.0);
 
@@ -64,29 +64,45 @@ void display(void)
 };
 
 // функция вызывается каждые 20 мс
-void simulation(int value){
+void simulation(int value) {
     // устанавливаем признак того, что окно нуждается в перерисовке
     glutPostRedisplay();
     // эта же функция будет вызвана еще раз через 20 мс
     glutTimerFunc(20, simulation, 0);
     smena(a);
+ //   gradient(a);
 };
 
-vec3 temp (1.0,1.0,1.0);
+vec3 temp(1.0, 1.0, 1.0);
 
-void smena(double dop){
+void smena(double dop) {
     a++;
-    if (dop > 100){
+    if (dop > 50) {
         a = 0;
         i++;
-        if (i > 5)i = 0;
+        if (i > 4)i = 0;
         temp = col[i];
-        col.push_back(temp);
+        cout << "смена цвета: " << i<<endl;
     }
     grad.r = temp.r;
     grad.g = temp.g;
     grad.b = temp.b;
+}
 
+void gradient(double dop) {
+    a++;
+    if (dop > 100) {
+        a = 0;
+        i++;
+        if (i > 3)i = 0;
+        grad1 = col[i];
+        grad2 = col[i + 1];
+        k = 0;
+    }
+    grad.r = k * (grad2.r - grad1.r) + grad1.r;
+    grad.g = k * (grad2.g - grad1.g) + grad1.g;
+    grad.b = k * (grad2.b - grad1.b) + grad1.b;
+    k += 0.01;
 }
 
 // Функция обработки нажатия клавиш
