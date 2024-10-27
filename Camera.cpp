@@ -26,22 +26,21 @@ vec3 Camera::getPosition() {return position;}
 float Camera::getAngleX() { return angleX; }
 float Camera::getAngleY() { return angleY; }
 float Camera::getR() { return r; }
-//функции для перемещения камеры
 
+//функции для перемещения камеры
 void Camera::rotateLeftRight(float degree) {
-	angleY = degree;
+	angleY =getAngleY() + degree;
 	recalculatePosition();
 }
 
 void Camera::rotateUpDown(float degree) {
-	angleX = degree;
+	angleX = getAngleX()+degree;
 	recalculatePosition();
 }
 
 void Camera::zoomInOut(float distance) {
-	r = distance;
+	r = getR()+distance;
 	recalculatePosition();
-
 }
 
 void Camera::apply(){
@@ -52,20 +51,10 @@ void Camera::apply(){
 }
 
 void Camera::recalculatePosition() {
-	vec3 direction(0.0,0.0,0.0); // Предполагаем, что камера смотрит в точку (0, 0, 0)
-
-	vec3 eye = getPosition(); // Исходная позиция
-	vec3 target = getPosition(); // Целевая позиция
-	vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-
-
-	// Вычисляем eye и center
-	target.x += cos(radians(getAngleY())) * cos(radians(getAngleY()));
-	target.y += sin(radians(getAngleY()));
-	target.z += cos(radians(getAngleY())) * sin(radians(getAngleX()));
-	eye = getPosition() + normalize(target - getPosition()) * getR();
+	vec3 eye;
+	eye.x = r * cos(radians(angleY)) * cos(radians(angleX));
+	eye.y = r * sin(radians(angleX));
+	eye.z = r * sin(radians(angleY)) * cos(radians(angleX));
 	position = eye;
-
 	apply();
-
 }
