@@ -11,15 +11,12 @@
 #include <glm/gtc/type_ptr.hpp>
 using namespace glm;
 
-
 // КЛАСС ДЛЯ РАБОТЫ С КАМЕРОЙ
 class Camera
 {
 public:
 	// конструкторы
 	Camera();
-	Camera(vec3 position);
-	Camera(float x, float y, float z);
 	// установка и получение позиции камеры
 	void setPosition(vec3 position);
 	vec3 getPosition();
