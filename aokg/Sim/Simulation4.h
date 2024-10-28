@@ -9,8 +9,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <functional>
+#include "Data.h"
+#include"Camera.h"
+#include<string>
 using namespace glm;
 
-
-    // Установка и получение позиции объекта
-    void simulation();
+// Установка и получение позиции объекта
+void simulation();
+float getSimulationTime();
+void initializeTiming();
