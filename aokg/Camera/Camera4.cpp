@@ -26,28 +26,39 @@ vec3 Camera::getPosition() {return position;}
 float Camera::getAngleX() { return angleX; }
 float Camera::getAngleY() { return angleY; }
 float Camera::getR() { return r; }
-
 //функции для перемещения камеры
+
 void Camera::rotateLeftRight(float degree) {
 	angleY =getAngleY() + degree;
 	recalculatePosition();
 }
 
 void Camera::rotateUpDown(float degree) {
+	float oldX = getAngleX();
 	angleX = getAngleX()+degree;
-	recalculatePosition();
+	if ((angleX >= 5) && (angleX <= 85)) {
+		recalculatePosition();
+	}
+	else {
+		angleX = oldX;
+		recalculatePosition();
+	}
 }
 
 void Camera::zoomInOut(float distance) {
-	r = getR()+distance;
-	recalculatePosition();
+	float oldR = getR();
+	r = getR() + distance;
+	if ((r >= 15) && (r <= 60)) {
+		recalculatePosition();
+	}
+	else {
+		r = oldR;
+		recalculatePosition();
+	}
 }
 
 void Camera::apply(){
-	//gluLookAt(10, 15, 22.5, 0, 0, 0, 0, 1, 0);
 	gluLookAt(getPosition().x, getPosition().y, getPosition().z, 0, 0, 0, 0, 1, 0);
-	//zoom, up/down, right/left
-
 }
 
 void Camera::recalculatePosition() {
