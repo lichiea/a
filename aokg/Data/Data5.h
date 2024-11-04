@@ -17,7 +17,7 @@ extern int frameCount;       // Счетчик кадров
 extern int fps;            // Количество FPS
 extern LARGE_INTEGER lastFPSCounter; // Последний отсчет для FPS
 //// список графических объектов
-extern std::vector<GraphicObject> graphicObjects;
+extern std::vector<GraphicObject*> graphicObjects;
 //// используемая камера
 extern Camera cam;
 extern Light light;
