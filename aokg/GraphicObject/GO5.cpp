@@ -43,6 +43,7 @@ void GraphicObject::recalculateModelMatrix(){
 void GraphicObject::draw(){
 	vec3 c = getColor();
 	glColor3f(c.r, c.g, c.b);
+	PhongMaterial* material = getMaterial();
 	if (material != nullptr) {
 		material->apply();
 	}
