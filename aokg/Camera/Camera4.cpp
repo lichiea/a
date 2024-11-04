@@ -58,6 +58,7 @@ void Camera::zoomInOut(float distance) {
 }
 
 void Camera::apply(){
+	//glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(getPosition().x, getPosition().y, getPosition().z, 0, 0, 0, 0, 1, 0);
 }
