@@ -58,7 +58,7 @@ void processInput(float sTime) {
 void display(void) {
 
     // отчищаем буфер цвета и буфер глубины
-    if (isOrthographic == true) glClearColor(0.00, 0.00, 0.00, 1.0);
+    if (isOrthographic == true) glClearColor(0.50, 0.50, 0.50, 1.0);
     else glClearColor(1.00, 1.00, 1.00, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -71,7 +71,7 @@ void display(void) {
     light.apply(GL_LIGHT0);
     // выводим все графические объекты
     for (auto& go : graphicObjects) {
-        go.draw();
+        go->draw();
     }
     // смена переднего и заднего буферов
     glutSwapBuffers();
