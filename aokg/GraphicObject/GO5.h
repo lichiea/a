@@ -7,6 +7,7 @@
 #include <GL/glu.h>
 #include "GL/freeglut.h"
 #include "PhongMaterial.h"
+#include<memory>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -29,8 +30,8 @@ public:
     void setСolor(vec3 color_temp);
     vec3 getColor();
     // Установка используемого материала
-    void setMaterial(PhongMaterial* materialk);
-    PhongMaterial* getMaterial();
+    void setMaterial(std::shared_ptr<PhongMaterial> material);
+    shared_ptr<PhongMaterial>getMaterial();
     // Вывести объект
     void draw();
     ~GraphicObject() {};
@@ -43,7 +44,7 @@ private:
     vec3 color;
     // Матрица модели (расположение объекта) - чтоб не вычислять каждый раз
     GLfloat modelMatrix[16];
-    PhongMaterial* material;
+    std::shared_ptr<PhongMaterial> material;
 private:
     // расчет матрицы modelMatrix на основе position и angle
     void recalculateModelMatrix();
