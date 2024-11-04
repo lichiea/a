@@ -26,8 +26,8 @@ void initData()
     initializeTiming();
     cam.setPosition(vec3(20, 15, 17.5));
     light.setPosition(vec4(20.0,20.0,15.0,1.0));
-    light.setAmbient(vec4( 0.4, 0.0, 0.0, 1.0 ));
-    light.setDiffuse(vec4(1.0, 0.0, 0.0, 1.0));
+    light.setAmbient(vec4( 1.0, 1.0, 1.0, 1.0 ));
+    light.setDiffuse(vec4(1.0, 1.0, 1.0, 1.0));
     light.setSpecular (vec4(1.0, 1.0, 1.0, 1.0));
     for (int i = 0; i < 4; ++i) {
         float ug;
