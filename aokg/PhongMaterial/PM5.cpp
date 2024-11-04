@@ -1,19 +1,14 @@
 #include "PhongMaterial.h"
 
+using namespace std;
 PhongMaterial::PhongMaterial() {};
 PhongMaterial::~PhongMaterial() {};
 
-void PhongMaterial::setAmbient(vec4 color) { ambient = color; }
+void PhongMaterial::setAmbient(vec4 color) {ambient = color; }
 void PhongMaterial::setDiffuse(vec4 color) { diffuse = color; }
 void PhongMaterial::setSpecular(vec4 color) { specular = color; }
 void PhongMaterial::setEmission(vec4 color) { emission = color; }
-void PhongMaterial::setShininess(float p) { shininess = p; }
-
-vec4 PhongMaterial::getAmbient() {return ambient; }
-vec4 PhongMaterial::getDiffuse() {return diffuse; }
-vec4 PhongMaterial::getSpecular() {return specular; }
-vec4 PhongMaterial::getEmission() {return emission; }
-float PhongMaterial::getShininess() {/* cout << shininess<<" "; */return shininess; }
+void PhongMaterial::setShininess(float p) {shininess = p; }
 
 void PhongMaterial::load(string filename) {
     ifstream vvod;
@@ -27,54 +22,54 @@ void PhongMaterial::load(string filename) {
         while (!vvod.eof()) {
             vvod >> par;
             if (par == "diffuse:") {
-                vec4 temp;
-                vvod >> par; temp.x = stof(par);
-                vvod >> par; temp.y = stof(par);
-                vvod >> par; temp.z = stof(par);
-                vvod >> par; temp.w = stof(par);
+                cout << par;
+                vec4 temp{0.0,0.0,0.0,0.0};
+                vvod >> par; temp.x = stod(par); cout << temp.x << " ";
+                vvod >> par; temp.y = stod(par); cout << temp.y << " ";
+                vvod >> par; temp.z = stod(par); cout <<  temp.z << " ";
+                vvod >> par; temp.w = stod(par); cout << temp.w << " "<<endl;
                 setDiffuse(temp);
             }
             if (par == "ambient:") {
+                cout << par;
                 vec4 temp;
-                vvod >> par; temp.x = stof(par);
-                vvod >> par; temp.y = stof(par);
-                vvod >> par; temp.z = stof(par);
-                vvod >> par; temp.w = stof(par);
+                vvod >> par; temp.x = stod(par); cout << temp.x << " ";
+                vvod >> par; temp.y = stod(par); cout << temp.y << " ";
+                vvod >> par; temp.z = stod(par); cout << temp.z << " ";
+                vvod >> par; temp.w = stod(par); cout << temp.w << " "<<endl;
                 setAmbient(temp);
             }
             if (par == "specular:") {
                 vec4 temp;
-                vvod >> par; temp.x = stof(par);
-                vvod >> par; temp.y = stof(par);
-                vvod >> par; temp.z = stof(par);
-                vvod >> par; temp.w = stof(par);
+                vvod >> par; temp.x = stod(par);
+                vvod >> par; temp.y = stod(par);
+                vvod >> par; temp.z = stod(par);
+                vvod >> par; temp.w = stod(par);
                 setSpecular(temp);
             }
             if (par == "emission:") {
                 vec4 temp;
-                vvod >> par; temp.x = stof(par);
-                vvod >> par; temp.y = stof(par);
-                vvod >> par; temp.z = stof(par);
-                vvod >> par; temp.w = stof(par);
+                vvod >> par; temp.x = stod(par);
+                vvod >> par; temp.y = stod(par);
+                vvod >> par; temp.z = stod(par);
+                vvod >> par; temp.w = stod(par);
                 setEmission(temp);
             }
             if (par == "shininess:") {
                 vvod >> par;
-                setShininess(stof(par));
+                setShininess(stod(par));
             }
         }
     }
+    cout << endl;
     vvod.close();
 }
 // установка всех параметров материала
 void PhongMaterial::apply(){
-    GLfloat dif[] = { 1.0,0.0,0.0,1.0 };
-    GLfloat sp[] = { 0.0,0.0,0.0,1.0 };
-    GLfloat am[] = { 0.2,0.0,0.0,1.0 };
-    GLfloat em[] = { 0.0,0.0,0.0,1.0 };
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, am); // Амбиентный цвет - серый
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif); // Диффузный цвет - белый
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, sp); // Спекулярный цвет - белый
-    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, em); // 
-    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 64);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, &ambient[0]); //
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, &diffuse[0]); //
+    glMaterialfv(GL_FRONT, GL_SPECULAR, &specular[0]); 
+    glMaterialfv(GL_FRONT, GL_EMISSION, &emission[0]); // 
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 }
