@@ -2,6 +2,9 @@
 //// используемые пространства имен
 using namespace glm;
 using namespace std;
+
+
+
 LARGE_INTEGER frequency;  // Частота таймера
 LARGE_INTEGER lastCounter; // Последний отсчет
 float simulationTime; // Время симуляции
@@ -12,7 +15,7 @@ LARGE_INTEGER lastFPSCounter; // Последний отсчет для FPS
 
 //// список графических объектов
 vector<GraphicObject*> graphicObjects;
-vector<PhongMaterial> mats;
+vector<shared_ptr<PhongMaterial>> materials;
 //// используемая камера
 Camera cam;
 Light light;
@@ -38,7 +41,7 @@ void initData()
         if (i == 3) { ug = 270; temp = vec3(0, 0, -5); }
         // Создаем новый объект GraphicObject
         GraphicObject* tempGraphicObject = new GraphicObject();
-        PhongMaterial* material = new PhongMaterial();
+        shared_ptr<PhongMaterial> material = make_shared<PhongMaterial>();
         // Загрузка материала
         material->load("data//materials//material_" +to_string(i+1) + ".txt");
 
@@ -47,8 +50,7 @@ void initData()
         tempGraphicObject->setAngle(ug);
         tempGraphicObject->setСolor(vec3(1, 1, 1));
         tempGraphicObject->setMaterial(material);
-
-        // Добавляем объект в вектор
+        materials.push_back(material);
         graphicObjects.push_back(tempGraphicObject);
     }
 }
