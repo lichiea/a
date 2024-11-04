@@ -1,3 +1,6 @@
+#pragma once
+
+#include <windows.h>
 #include <stdio.h>
 #include <string>
 #include <GL/gl.h>
@@ -25,11 +28,6 @@ public:
 	void setSpecular(vec4 color);
 	void setEmission(vec4 color);
 	void setShininess(float p);
-	vec4 getAmbient();
-	vec4 getDiffuse();
-	vec4 getSpecular();
-	vec4 getEmission();
-	float getShininess();
 	// загрузка параметров материала из внешнего текстового файла
 	void load(string filename);
 	// установка всех параметров материала
