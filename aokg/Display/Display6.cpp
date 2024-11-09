@@ -90,7 +90,13 @@ void display(void) {
     //for (auto& go : graphicObjects) {
     //    go->draw();
     //}
-    m.draw();
+    for (int i = 0; i < 21; i++) {
+        for (int j = 0; j < 21; j++) {
+            mapObjects[i][j]->draw();
+        }
+    }
+    planeGraphicObject.draw();
+    //m.draw();
     // Отключаем вершинные массивы
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
