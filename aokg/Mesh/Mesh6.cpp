@@ -84,7 +84,7 @@ void Mesh::draw() {
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex), &vertices[0].coord[0]);
     glNormalPointer(GL_FLOAT, sizeof(Vertex), &vertices[0].normal[0]);
     glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &vertices[0].texCoord[0]);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
+    glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 };
 
 void Mesh::form_v(vector<vec3> v, vector<vec3> n, vector<vec2> t, vector<ivec3> fPoints) {
