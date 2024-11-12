@@ -47,13 +47,13 @@ void GraphicObject::draw() {
 	if (material != nullptr) {
 		material->apply();
 	}
+
+	glPushMatrix();
+	glMultMatrixf(modelMatrix);
 	shared_ptr<Mesh> mesh = getMesh();
 	if (mesh != nullptr) {
 		mesh->draw();
 	}
-	glPushMatrix();
-	glMultMatrixf(modelMatrix);
-
 	glPopMatrix();
 }
 
