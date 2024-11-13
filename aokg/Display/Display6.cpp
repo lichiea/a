@@ -73,7 +73,7 @@ void display(void) {
 
     // отчищаем буфер цвета и буфер глубины
     if (isOrthographic == true) glClearColor(0.00, 0.00, 0.00, 1.0);
-    else glClearColor(1.00, 1.00, 1.00, 1.0);
+    else glClearColor(0.00, 0.00, 0.00, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // включаем тест глубины
@@ -87,16 +87,15 @@ void display(void) {
     // устанавливаем источник света
     light.apply(GL_LIGHT0);
     // выводим все графические объекты
-    //for (auto& go : graphicObjects) {
-    //    go->draw();
-    //}
     for (int i = 0; i < 21; i++) {
         for (int j = 0; j < 21; j++) {
             mapObjects[i][j]->draw();
         }
     }
+ 
+
     planeGraphicObject.draw();
-    //m.draw();
+    
     // Отключаем вершинные массивы
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
@@ -107,7 +106,7 @@ void display(void) {
 
     getFPS();
 
-};
+}
 
 void getFPS() {
     LARGE_INTEGER currentCounter;
