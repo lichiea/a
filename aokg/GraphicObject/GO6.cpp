@@ -1,13 +1,18 @@
 #include "GraphicObject.h"
 
-GraphicObject::GraphicObject() {};
+GraphicObject::GraphicObject():position(vec3(0.0,0.0,0.0)) {};
 
 void GraphicObject::setPosition(vec3 position_temp) {
-	position = position_temp;
-	recalculateModelMatrix();
+	if (this != nullptr) {
+				this->position = position_temp;
+		recalculateModelMatrix();
+		}
+
+	//cout << "(" << position.x << ", " << position.y << ", " << position.z << ")" << endl;
 };
 
-vec3 GraphicObject::getPosition() { return position; }
+vec3 GraphicObject::getPosition() { //cout << "(" << position.x << ", " << position.y << ", " << position.z << ")" << endl; 
+return this->position;  }
 
 void GraphicObject::setAngle(float grad) {
 	angle = grad;
@@ -21,38 +26,36 @@ vec3 GraphicObject::getColor() { return color; }
 void GraphicObject::setMaterial(shared_ptr<PhongMaterial> materialk) { material = materialk; };
 shared_ptr<PhongMaterial> GraphicObject::getMaterial() { return material; };
 
-// расчет матрицы modelMatrix на основе position и angle
+// расчет матрицы modelMatrix на основе position
 void GraphicObject::recalculateModelMatrix() {
-	mat4 model = mat4(1.0);
-	// Перевод
-	model = translate(model, getPosition());
-	// Вращение вокруг
-	model = rotate(model, radians(getAngle()), vec3(0.0, 1.0, 0.0));
-	// Сохранение матрицы в массив GLfloat
+
+	mat4 model = mat4(1.0);  // Единичная матрица
+	model = translate(model, this->getPosition());  // Применяем сдвиг
+
+	// Копируем матрицу преобразования в массив modelMatrix
 	for (int i = 0; i < 16; ++i) {
-		float value = model[i / 4][i % 4];
-		if (i < 12) modelMatrix[i] = (value >= 0.5) ? 1.0 : (value <= -0.5) ? -1.0 : 0.0;
-		else {
-			modelMatrix[i] = (value >= 4.5) ? 5.0 : (value <= -4.5) ? -5.0 : 0.0;
-		}
-		modelMatrix[15] = 1.0;
+		//if (i % 4 == 0)cout << endl;
+		modelMatrix[i] = model[i / 4][i % 4];
+		//cout << modelMatrix[i]<<" ";
+
 	}
+	//cout << endl;
 
 }
 // вывести объект
 void GraphicObject::draw() {
-	vec3 c = getColor();
-	glColor3f(c.r, c.g, c.b);
-	shared_ptr<PhongMaterial> material = getMaterial();
-	if (material != nullptr) {
-		material->apply();
+
+	glColor3f(this->color.r, this->color.g, this->color.b);
+
+	if (this->material != nullptr) {
+		this->material->apply();
 	}
 
 	glPushMatrix();
 	glMultMatrixf(modelMatrix);
-	shared_ptr<Mesh> mesh = getMesh();
-	if (mesh != nullptr) {
-		mesh->draw();
+
+	if (this->mesh != nullptr) {
+		this->mesh->draw();
 	}
 	glPopMatrix();
 }
