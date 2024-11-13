@@ -1,13 +1,24 @@
 #include "Display.h"
 using namespace glm;
 bool isOrthographic = true;
+float Sscale = 0.3;
+
+
+void zoomOrt(float distance) {
+    Sscale += distance * 0.05;
+    if (Sscale < 0.3) Sscale = 0.3;
+    if (Sscale > 2.3) Sscale = 2.3;
+    reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+}
 
 void setProjection(int width, int height) {
     if (isOrthographic) {
         float aspect = (float)width / height;
-        float orthoHeight = 0.2 * tan(25.0 * 0.5 * 3.14 / 180.0); // высота на ближней плоскости
-        float orthoWidth = orthoHeight * aspect;
-        glOrtho(-10.05875, 10.05875, -10.04406, 10.04406, -70.0, 70.0);
+        float orthoHeight = 10.0 * Sscale; // высота на ближней плоскости
+        float orthoWidth = 10.0 * Sscale;
+        if (aspect >= 1.0) { glOrtho(-aspect * orthoWidth, aspect * orthoWidth, -orthoHeight, orthoHeight, 0.2, 70.0); }
+        else { glOrtho(-orthoWidth, orthoWidth, -orthoHeight / aspect, orthoHeight / aspect, 0.2, 70.0); }
+
     }
     else {
         gluPerspective(25.0, (float)width / height, 0.2, 70.0);
@@ -19,8 +30,8 @@ void reshape(int width, int height) {
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    //setProjection(width, height);
-    gluPerspective(25.0, (float)width / height, 0.2, 70.0);
+    setProjection(width, height);
+    //gluPerspective(25.0, (float)width / height, 0.2, 70.0);
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -45,8 +56,8 @@ void processInput(float sTime) {
     }
     if (GetAsyncKeyState(VK_RBUTTON)) {
         isOrthographic = !isOrthographic; // Переключаем флаг
-        if (isOrthographic == true) cout << "or";
-        else cout << "per";
+        if (isOrthographic == true) cout << "or ";
+        else cout << "per ";
         int width = glutGet(GLUT_WINDOW_WIDTH);
         int height = glutGet(GLUT_WINDOW_HEIGHT);
         setProjection(width, height); // Обновляем проекцию
