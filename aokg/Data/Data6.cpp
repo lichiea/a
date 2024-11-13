@@ -71,68 +71,59 @@ void initData()
 
 
 
-        // Создаем новый объект GraphicObject
-    std::shared_ptr<GraphicObject> tempGraphicObject1 = std::make_shared<GraphicObject>();
-    std::shared_ptr<GraphicObject> tempGraphicObject2 = std::make_shared<GraphicObject>();
-    std::shared_ptr<GraphicObject> tempGraphicObject3 = std::make_shared<GraphicObject>();
+    // Создаем новый объект GraphicObject
+    GraphicObject tempGraphicObject1, tempGraphicObject2, tempGraphicObject3;
 
-        shared_ptr<PhongMaterial> material = make_shared<PhongMaterial>();
-        shared_ptr<Mesh> mesh = make_shared<Mesh>();
+    shared_ptr<PhongMaterial> material = make_shared<PhongMaterial>();
+    shared_ptr<Mesh> meshp = make_shared<Mesh>();
 
-        //11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
-        shared_ptr<PhongMaterial> material1 = make_shared<PhongMaterial>();
-        material1->load("data//materials//material_1.txt");
-        shared_ptr<Mesh> mesh1 = make_shared<Mesh>();
-        mesh1->load("data//meshes//ChamferBox.obj");
-        tempGraphicObject1->setAngle(0.0);
-        tempGraphicObject1->setСolor(vec3(1, 1, 1));
-        tempGraphicObject1->setMaterial(material1);
-        tempGraphicObject1->setMesh(mesh1);
-        meshes.push_back(mesh1);
-        materials.push_back(material1);
-        graphicObjects.push_back(tempGraphicObject1);
-        //22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
-        shared_ptr<PhongMaterial> material2 = make_shared<PhongMaterial>();
-        material2->load("data//materials//material_2.txt");
-        shared_ptr<Mesh> mesh2 = make_shared<Mesh>();
-        mesh2->load("data//meshes//Box.obj");
-        //tempGraphicObject2->setPosition(temp2);
-        tempGraphicObject2->setAngle(0.0);
-        tempGraphicObject2->setСolor(vec3(1, 1, 1));
-        tempGraphicObject2->setMaterial(material2);
-        tempGraphicObject2->setMesh(mesh2);
-        meshes.push_back(mesh2);
-        materials.push_back(material2);
-        graphicObjects.push_back(tempGraphicObject2);
+    //11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+    shared_ptr<PhongMaterial> material1 = make_shared<PhongMaterial>();
+    material1->load("data//materials//material_2.txt");
+    shared_ptr<Mesh> mesh1 = make_shared<Mesh>();
+    mesh1->load("data//meshes//ChamferBox.obj");
 
-        //33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
-        shared_ptr<PhongMaterial> material3 = make_shared<PhongMaterial>();
-        shared_ptr<Mesh> mesh3 = make_shared<Mesh>();
-        material3->load("data//materials//material_3.txt");
-        mesh3->load("data//meshes//Box.obj");
-        //tempGraphicObject3->setPosition(temp3);
-        tempGraphicObject3->setAngle(0.0);
-        tempGraphicObject3->setСolor(vec3(1, 1, 1));
-        tempGraphicObject3->setMaterial(material3);
-        tempGraphicObject3->setMesh(mesh3);
-        meshes.push_back(mesh3);
-        materials.push_back(material3);
-        graphicObjects.push_back(tempGraphicObject3);
+    tempGraphicObject1.setMaterial(material1);
+    tempGraphicObject1.setMesh(mesh1);
+    meshes.push_back(mesh1);
+    materials.push_back(material1);
+    graphicObjects.push_back(make_shared<GraphicObject>(tempGraphicObject1));
 
-        //4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
-        material->load("data//materials//material_4.txt");
-        mesh->load("data//meshes//SimplePlane.obj");
-        //planeGraphicObject.setPosition(vec3(0.0,0.0,0.0));
-        planeGraphicObject.setAngle(0.0);
-        planeGraphicObject.setСolor(vec3(1, 1, 1));
-        planeGraphicObject.setMaterial(material);
-        planeGraphicObject.setMesh(mesh);
-        meshes.push_back(mesh);
-        materials.push_back(material);
-        for (int i = 0; i < 21; i++) {
-            for (int j = 0; j < 21; j++) {
-                shared_ptr<GameObject> obj = make_shared<GameObject>();
-                obj->setPosition(i, j);
+    //22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+    shared_ptr<PhongMaterial> material2 = make_shared<PhongMaterial>();
+    material2->load("data//materials//material_3.txt");
+    shared_ptr<Mesh> mesh2 = make_shared<Mesh>();
+    mesh2->load("data//meshes//Box.obj");
+ 
+    tempGraphicObject2.setMaterial(material2);
+    tempGraphicObject2.setMesh(mesh2);
+    meshes.push_back(mesh2);
+    materials.push_back(material2);
+    graphicObjects.push_back(make_shared<GraphicObject>(tempGraphicObject2));
+
+    //33333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+    shared_ptr<PhongMaterial> material3 = make_shared<PhongMaterial>();
+    shared_ptr<Mesh> mesh3 = make_shared<Mesh>();
+    material3->load("data//materials//material_4.txt");
+    mesh3->load("data//meshes//Box.obj");
+    tempGraphicObject3.setMaterial(material3);
+    tempGraphicObject3.setMesh(mesh3);
+    meshes.push_back(mesh3);
+    materials.push_back(material3);
+    graphicObjects.push_back(make_shared<GraphicObject>(tempGraphicObject3));
+
+    //4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+    material->load("data//materials//material_1.txt");
+    meshp->load("data//meshes//SimplePlane.obj");
+    planeGraphicObject.setMaterial(material);
+    planeGraphicObject.setMesh(meshp);
+    planeGraphicObject.setPosition(vec3(0.0, -0.5, 0.0));
+    meshes.push_back(meshp);
+    materials.push_back(material);
+    for (int i = 0; i < 21; i++) {
+           for (int j = 0; j < 21; j++) {
+               shared_ptr<GameObject> obj = make_shared<GameObject>();
+               obj->setPosition(i, j);
                 if (passabilityMap[i][j] == 1) {
                     obj->setGraphicObject(tempGraphicObject1);
                 }
@@ -142,10 +133,7 @@ void initData()
                 if (passabilityMap[i][j] == 3) {
                     obj->setGraphicObject(tempGraphicObject3);
                 }
-                mapObjects[i][j] = obj;
-
-                cout << passabilityMap[i][j] << "  ";
+                mapObjects[i][j] = obj;                
             }
-            cout << endl;
         }
 }
