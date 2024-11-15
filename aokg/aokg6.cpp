@@ -18,7 +18,7 @@
 
 using namespace glm;
 using namespace std;
-
+//https://github.com/lpestl/Maze?tab=readme-ov-file#12-реализация-на-c
 
 void main(int argc, char** argv) {
     setlocale(LC_ALL, "ru");
