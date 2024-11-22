@@ -29,6 +29,20 @@ bool GameObjectFactory::init(std::string filename) {
 
 
 shared_ptr<GameObject> GameObjectFactory::create(GameObjectType type, int x, int y) {
-	shared_ptr<GameObject> a;
+	shared_ptr<GameObject> a = make_shared<GameObject>();
+	GraphicObject b;
+	auto fi1 = mes.find(type);
+	auto fi2 = mat.find(type);
+	// проверяем, удалось ли найти элемент
+	if (fi1 != mes.end()) {
+		b.setMesh(fi1->second);
+	}
+	else {};
+	if (fi2 != mat.end()) {
+		b.setMaterial(fi2->second);
+	}
+	else {};
+	a->setPosition(x, y);
+	a->setGraphicObject(b);
 	return a;
 }
