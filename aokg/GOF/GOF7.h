@@ -35,4 +35,7 @@ private:
 	vector<shared_ptr<Mesh>> Meshes;
 	// материалы для каждого типа объекта
 	vector<shared_ptr<PhongMaterial>> Materials;
+	map<GameObjectType, shared_ptr<Mesh>> mes;
+	map<GameObjectType, shared_ptr<PhongMaterial>> mat;
+
 };
