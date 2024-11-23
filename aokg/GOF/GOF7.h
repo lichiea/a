@@ -4,7 +4,11 @@
 #include "Mesh.h"
 #include "GameObject.h"
 #include <rapidjson/document.h>
+#include "rapidjson/istreamwrapper.h"
+#include <fstream>
 #include<iostream>
+#include<map>
+#include<string>
 // указываем используемые пространства имен
 using namespace rapidjson;
 using namespace glm;
@@ -30,6 +34,10 @@ public:
 	bool init(std::string filename);
 	// создание нового объекта заданного типа
 	shared_ptr<GameObject> create(GameObjectType type, int x, int y);
+
+	vec4 extractVec4(const Value& node);
+
+	shared_ptr<PhongMaterial> createMaterial(const Value& materialNode);
 private:
 	// меши для каждого типа объекта
 	vector<shared_ptr<Mesh>> Meshes;
