@@ -20,38 +20,14 @@ bool GameObjectFactory::init(std::string filename) {
 		return false;
 	}
 
-	// Функция для создания материала из JSON
-	auto createMaterial = [](const Value& materialNode) -> shared_ptr<PhongMaterial> {
-		glm::vec4 diffuse = glm::vec4(materialNode["diffuse"].GetArray()[0].GetFloat(),
-			materialNode["diffuse"].GetArray()[1].GetFloat(),
-			materialNode["diffuse"].GetArray()[2].GetFloat(),
-			materialNode["diffuse"].GetArray()[3].GetFloat());
-
-		glm::vec4 ambient = glm::vec4(materialNode["ambient"].GetArray()[0].GetFloat(),
-			materialNode["ambient"].GetArray()[1].GetFloat(),
-			materialNode["ambient"].GetArray()[2].GetFloat(),
-			materialNode["ambient"].GetArray()[3].GetFloat());
-
-		glm::vec4 specular = glm::vec4(materialNode["specular"].GetArray()[0].GetFloat(),
-			materialNode["specular"].GetArray()[1].GetFloat(),
-			materialNode["specular"].GetArray()[2].GetFloat(),
-			materialNode["specular"].GetArray()[3].GetFloat());
-
-		glm::vec4 emission = glm::vec4(materialNode["emission"].GetArray()[0].GetFloat(),
-			materialNode["emission"].GetArray()[1].GetFloat(),
-			materialNode["emission"].GetArray()[2].GetFloat(),
-			materialNode["emission"].GetArray()[3].GetFloat());
-
-		float shininess = materialNode["shininess"].GetFloat();
-
-		return make_shared<PhongMaterial>();
-		};
+	
 
     // Загружаем данные для каждого типа объекта
     if (doc.HasMember("LightObject")) {
         auto& obj = doc["LightObject"];
         string meshPath = obj["mesh"].GetString();
         shared_ptr<Mesh> mesh = make_shared<Mesh>(); // Создание меша
+		mesh->load(meshPath);
         shared_ptr<PhongMaterial> material = createMaterial(obj["material"]);
 
         mes[GameObjectType::LIGHT_OBJECT] = mesh;
@@ -62,6 +38,7 @@ bool GameObjectFactory::init(std::string filename) {
         auto& obj = doc["HeavyObject"];
         string meshPath = obj["mesh"].GetString();
         shared_ptr<Mesh> mesh = make_shared<Mesh>(); // Создание меша
+		mesh->load(meshPath);
         shared_ptr<PhongMaterial> material = createMaterial(obj["material"]);
 
         mes[GameObjectType::HEAVY_OBJECT] = mesh;
@@ -72,6 +49,7 @@ bool GameObjectFactory::init(std::string filename) {
         auto& obj = doc["BorderObject"];
         string meshPath = obj["mesh"].GetString();
         shared_ptr<Mesh> mesh = make_shared<Mesh>(); // Создание меша
+		mesh->load(meshPath);
         shared_ptr<PhongMaterial> material = createMaterial(obj["material"]);
 
         mes[GameObjectType::BORDER_OBJECT] = mesh;
@@ -93,6 +71,7 @@ bool GameObjectFactory::init(std::string filename) {
         auto& obj = doc["Bomb"];
         string meshPath = obj["mesh"].GetString();
         shared_ptr<Mesh> mesh = make_shared<Mesh>(); // Создание меша
+		mesh->load(meshPath);
         shared_ptr<PhongMaterial> material = createMaterial(obj["material"]);
 
         mes[GameObjectType::BOMB] = mesh;
@@ -103,6 +82,7 @@ bool GameObjectFactory::init(std::string filename) {
         auto& obj = doc["Monster"];
         string meshPath = obj["mesh"].GetString();
         shared_ptr<Mesh> mesh = make_shared<Mesh>(); // Создание меша
+		mesh->load(meshPath);
         shared_ptr<PhongMaterial> material = createMaterial(obj["material"]);
 
         mes[GameObjectType::MONSTER] = mesh;
@@ -113,7 +93,33 @@ bool GameObjectFactory::init(std::string filename) {
 
 }
 
+glm::vec4 GameObjectFactory::extractVec4(const Value& node) {
+    return glm::vec4(
+        node.GetArray()[0].GetFloat(),
+        node.GetArray()[1].GetFloat(),
+        node.GetArray()[2].GetFloat(),
+        node.GetArray()[3].GetFloat()
+    );
+}
 
+shared_ptr<PhongMaterial> GameObjectFactory::createMaterial(const Value& materialNode) {
+    shared_ptr<PhongMaterial> ptr=make_shared<PhongMaterial>();
+    // Extracting properties using the helper function
+    glm::vec4 diffuse = extractVec4(materialNode["diffuse"]);
+    glm::vec4 ambient = extractVec4(materialNode["ambient"]);
+    glm::vec4 specular = extractVec4(materialNode["specular"]);
+    glm::vec4 emission = extractVec4(materialNode["emission"]);
+
+    // Extract shininess value
+    float shininess = materialNode["shininess"].GetFloat();
+    ptr->setAmbient(ambient);
+    ptr->setDiffuse(diffuse);
+    ptr->setEmission(emission);
+    ptr->setSpecular(specular);
+    ptr->setShininess(shininess);
+    // Create and return the PhongMaterial object
+    return ptr;
+}
 
 shared_ptr<GameObject> GameObjectFactory::create(GameObjectType type, int x, int y) {
 	shared_ptr<GameObject> a = make_shared<GameObject>();
@@ -122,8 +128,8 @@ shared_ptr<GameObject> GameObjectFactory::create(GameObjectType type, int x, int
 	auto fi2 = mat.find(type);
 	// проверяем, удалось ли найти элемент
 	if (fi1 != mes.end()) {
+
 		b.setMesh(fi1->second);
-		cout << "a!";
 	}
 	else {};
 	if (fi2 != mat.end()) {
