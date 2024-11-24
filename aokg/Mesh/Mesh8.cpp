@@ -9,7 +9,7 @@
 // конструктор
 Mesh::Mesh() {
     indexCount = 0;
-    //glGenBuffers(2, bufferIds);
+
 };
 
 
