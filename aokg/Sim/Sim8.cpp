@@ -61,7 +61,7 @@ void gameObjectSimulation(float ttime) {
             cout << "a";
         }
         if (mapObjects[pos.x][pos.y]->getType() == GameObjectType::LIGHT_OBJECT) {
-            mapObjects[pos.x][pos.y] = 0;
+            ivec2 posl = pos;
             switch (s) {
             case MoveDirection::LEFT:
                 pos.y += 1;
@@ -78,10 +78,14 @@ void gameObjectSimulation(float ttime) {
             default:
                 break;
             }
-            mapObjects[pos.x][pos.y] = gameObjectFactory.create(GameObjectType::LIGHT_OBJECT, pos.x, pos.y);
-            mapObjects[pos.x][pos.y]->simulate(ttime);
-            movePlayer(ttime);
-            cout << "b";
+            if (mapObjects[pos.x][pos.y] == 0) {
+                mapObjects[posl.x][posl.y] = 0;
+                mapObjects[pos.x][pos.y] = gameObjectFactory.create(GameObjectType::LIGHT_OBJECT, pos.x, pos.y);
+                mapObjects[pos.x][pos.y]->simulate(ttime);
+                movePlayer(ttime);
+                cout << "b";
+            }
+            else {}
         }
         else {
             //player->setPosition(poss);
