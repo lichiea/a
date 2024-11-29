@@ -15,7 +15,15 @@
 
 // класс-перечисление для указания направления перемещения
 enum class MoveDirection { STOP, LEFT, RIGHT, UP, DOWN };
-
+// ОПРЕДЕЛЕНИЕ ТИПОВ ИГРОВЫХ ОБЪЕКТОВ
+enum class GameObjectType {
+	LIGHT_OBJECT, // легкий игровой объект
+	HEAVY_OBJECT, // тяжелый игровой объект
+	BORDER_OBJECT, // граничный игровой объект
+	PLAYER, // игровой объект для представления игрока
+	BOMB, // игровой объект для представления бомбы
+	MONSTER // игровой объект для представления монстров
+};
 // КЛАСС ДЛЯ ПРЕДСТАВЛЕНИЯ ИГРОВОГО ОБЪЕКТА
 class GameObject
 {
@@ -30,6 +38,9 @@ public:
 	void setPosition(ivec2 position);
 	// получение текущих логических координат
 	ivec2 getPosition();
+	MoveDirection getSost();
+	void setType(GameObjectType got);
+	GameObjectType getType();
 	// вывод игрового объекта на экран
 	void draw(void);
 	// начать движение в выбранном направлении с указанной скоростью
@@ -51,4 +62,5 @@ private:
 	float progress;
 	// скорость перемещения
 	float speed;
+	GameObjectType tip;
 };
