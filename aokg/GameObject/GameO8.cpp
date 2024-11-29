@@ -21,6 +21,13 @@ void  GameObject::setPosition(ivec2 positionk) {
     //this->graphicObject.setPosition({ positionk.x - 10,0,positionk.y - 10 });
 };
 
+void GameObject::setPositionCube(int x, int y) {
+    ivec2 p(x, y);
+    this->position = p;
+    this->graphicObject.setPosition({ x - 10,0,y - 10 });
+
+}
+
 // получение текущих логических координат
 ivec2  GameObject::getPosition() { return this->position; };
 MoveDirection GameObject::getSost() { return this->sost; };
@@ -50,103 +57,22 @@ bool GameObject::isMoving() {
 }
 // симуляция игрового объекта (плавное перемещение объекта)
 // метод вызывается непрерывно в функции simulation
-void GameObject::simulate(float sec) {
-    if (this == nullptr) { return; }
-    if (this->sost == MoveDirection::STOP) { return; }
-    else {
-        ivec2 pos2s = getPosition();
-        vec3 posob = this->graphicObject.getPosition();
-        
-            switch (this->sost) {
-            case MoveDirection::LEFT:
-                posob.z += (1 - this->progress) / 20;
+void GameObject::simulate(const ivec2& targetPos, float deltaTime) {
+    if (this->sost == MoveDirection::STOP) return;
 
-                cout << "(" << pos2s.x << "  " << pos2s.y << ")";
-                this->graphicObject.setPosition({ posob.x,0,posob.z });
-                this->progress += this->speed * sec;
-                cout << this->progress << "   ";
-                if (this->progress > 1) {
-                    pos2s.y += 1;
-                    this->progress = 1;
-                    this->setPosition(pos2s.x, pos2s.y);
-                    cout << "(" << pos2s.x << "  " << pos2s.y << ")";
-                    this->graphicObject.setPosition({ this->position.x - 10,0,this->position.y - 10 });
-                    this->sost = MoveDirection::STOP;
-                    return;
-                }
-                cout << endl;
-                break;
-            case MoveDirection::RIGHT:
-                posob.z -= (1 - this->progress) / 20;
+    vec3 currentPos = this->graphicObject.getPosition();
+    vec3 targetPos3D = { (float)targetPos.x -10, 0, (float)targetPos.y- 10 };
 
+    float distance = glm::distance(currentPos, targetPos3D);
+    float moveDistanceThisFrame = this->speed * deltaTime;
 
-                cout << "(" << pos2s.x << "  " << pos2s.y << ")";
-                this->graphicObject.setPosition({ posob.x,0,posob.z });
-                this->progress += this->speed * sec;
-                cout << this->progress << "   ";
-                if (this->progress > 1) {
-                    pos2s.y -= 1;
-                    this->progress = 1;
-                    this->setPosition(pos2s.x, pos2s.y);
-                    cout << "(" << pos2s.x << "  " << pos2s.y << ")";
-                    this->graphicObject.setPosition({ this->position.x - 10,0,this->position.y - 10 });
-                    this->sost = MoveDirection::STOP;
-                    return;
-                }
-                cout << endl;
-                break;
-            case MoveDirection::UP:
-                posob.x -= (1 - this->progress) / 20;
-                cout << "(" << pos2s.x << "  " << pos2s.y << ")";
-                this->graphicObject.setPosition({ posob.x,0,posob.z });
-                this->progress += this->speed * sec;
-                cout << this->progress << "   ";
-                if (this->progress > 1) {
-                    pos2s.x -= 1;
-                    this->progress = 1;
-                    this->setPosition(pos2s.x, pos2s.y);
+    float lerpValue = std::min(1.0f, moveDistanceThisFrame / distance);
+    vec3 newPos = glm::mix(currentPos, targetPos3D, lerpValue);
+    this->graphicObject.setPosition(newPos);
 
-                    cout << "(" << pos2s.x << "  " << pos2s.y << ")";
-                    this->graphicObject.setPosition({ this->position.x - 10,0,this->position.y - 10 });
-                    this->sost = MoveDirection::STOP;
-                    return;
-                }
-                cout << endl;
-                break;
-            case MoveDirection::DOWN:
-                this->progress += this->speed * sec;
-                posob.x += (1- this->progress)/20;
-
-                cout << "(" << pos2s.x << "  " << pos2s.y << ")";
-                this->graphicObject.setPosition({ posob.x,0,posob.z});
-
-                cout << this->progress << "   ";
-                if (this->progress >1) {
-                    pos2s.x += 1;
-                    this->progress = 1;
-                    this->setPosition(pos2s.x, pos2s.y);
-                    cout << "(" << pos2s.x << "  " << pos2s.y << ")";
-                    this->graphicObject.setPosition({ this->position.x - 10,0,this->position.y - 10 });
-                    this->sost = MoveDirection::STOP;
-                    return;
-                }
-                cout << endl;
-                break;
-            default:
-                break;
-            }
-            //this->setPosition(pos2s.x, pos2s.y);
-            //cout << "(" << pos2s.x << "  " << pos2s.y << ")";
-            //this->graphicObject.setPosition({ this->position.x - 10,0,this->position.y - 10 });
-            //this->progress += this->speed * sec;
-            //cout << this->progress << "   ";
-        
-        //if (this->progress > 1) {
-        //    this->progress = 1;
-        //    this->setPosition(pos2s.x, pos2s.y);
-        //    this->graphicObject.setPosition({ this->position.x - 10,0,this->position.y - 10 });
-        //    this->sost = MoveDirection::STOP;
-        //    return;
-        //}
+    if (distance <= moveDistanceThisFrame) {
+        this->graphicObject.setPosition(targetPos3D);
+        this->sost = MoveDirection::STOP;
+        this->setPosition(targetPos.x, targetPos.y);
     }
 }
