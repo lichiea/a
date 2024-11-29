@@ -23,7 +23,13 @@ void  GameObject::setPosition(ivec2 positionk) {
 
 // получение текущих логических координат
 ivec2  GameObject::getPosition() { return this->position; };
-
+MoveDirection GameObject::getSost() { return this->sost; };
+void GameObject::setType(GameObjectType got) {
+    this->tip = got;
+};
+GameObjectType GameObject::getType() { 
+    if (this!=nullptr) return this->tip; 
+};
 // вывод игрового объекта на экран
 void  GameObject::draw(void) {
         this->graphicObject.draw();
@@ -33,7 +39,6 @@ void GameObject::move(MoveDirection direction){
     this->speed = 0.3;
     this->sost = direction;
     this->progress = 0;
-
 }
 // проверка на то, что объект в настоящий момент движется
 bool GameObject::isMoving() {
@@ -43,13 +48,14 @@ bool GameObject::isMoving() {
 // симуляция игрового объекта (плавное перемещение объекта)
 // метод вызывается непрерывно в функции simulation
 void GameObject::simulate(float sec) {
+    if (this == nullptr) { return; }
     if (this->sost == MoveDirection::STOP) { return; }
     else {
-        ivec2 pos2 = getPosition();
-        this->progress +=  sec*1000;
-        cout << sec<<"  ";
+        ivec2 pos2s = getPosition();
+        ivec2 pos2e;
+        this->progress +=  this->speed*sec;
         if (this->progress > 1) {
-            this->progress = 0;
+            this->progress = 1;
             this->sost = MoveDirection::STOP;
             return;
         }
@@ -57,10 +63,10 @@ void GameObject::simulate(float sec) {
         ivec2 newPos = this->position;
         switch (sost) {
         case MoveDirection::LEFT:
-            this->setPosition(this->getPosition().x, (this->getPosition().y + this->progress));
+            this->setPosition(this->getPosition().x, (this->getPosition().y + 1));
             this->graphicObject.setPosition({ this->position.x - 10,0,this->position.y - 10 });
 
-            //sost = MoveDirection::STOP;
+            sost = MoveDirection::STOP;
             break;
         case MoveDirection::RIGHT:
             this->setPosition(this->getPosition().x, (this->getPosition().y - 1));
