@@ -28,72 +28,57 @@ void simulation() {
     simulationTime = getSimulationTime();
 
     gameObjectSimulation(simulationTime);
-    //movePlayer(simulationTime);
- 
+    
+    
     // Устанавливаем признак того, что окно нуждается в перерисовке
     glutPostRedisplay();
 }
 
 
-void gameObjectSimulation(float ttime) {
-    ivec2 pos = player->getPosition();
-    ivec2 poss = player->getPosition();
+void gameObjectSimulation(float deltaTime) { // Use deltaTime instead of ttime
     MoveDirection s = player->getSost();
     if (s != MoveDirection::STOP) {
+        ivec2 currentPos = player->getPosition();
+        ivec2 targetPos = currentPos; // Target position
+
         switch (s) {
-        case MoveDirection::LEFT:
-            pos.y += 1;
-            break;
-        case MoveDirection::RIGHT:
-            pos.y -= 1;
-            break;
-        case MoveDirection::UP:
-            pos.x -= 1;
-            break;
-        case MoveDirection::DOWN:
-            pos.x += 1;
-            break;
-        default:
-            break;
+        case MoveDirection::LEFT:  targetPos.y++; break;
+        case MoveDirection::RIGHT: targetPos.y--; break;
+        case MoveDirection::UP:    targetPos.x--; break;
+        case MoveDirection::DOWN:  targetPos.x++; break;
         }
-        if (mapObjects[pos.x][pos.y] == 0) {
-            movePlayer(ttime);
-            cout << "a";
+
+        if (mapObjects[targetPos.x][targetPos.y] == nullptr) { // Check for empty space
+            movePlayer(targetPos, deltaTime); // Pass target position and deltaTime
         }
-        if (mapObjects[pos.x][pos.y]->getType() == GameObjectType::LIGHT_OBJECT) {
-            ivec2 posl = pos;
-            switch (s) {
-            case MoveDirection::LEFT:
-                pos.y += 1;
-                break;
-            case MoveDirection::RIGHT:
-                pos.y -= 1;
-                break;
-            case MoveDirection::UP:
-                pos.x -= 1;
-                break;
-            case MoveDirection::DOWN:
-                pos.x += 1;
-                break;
-            default:
-                break;
-            }
-            if (mapObjects[pos.x][pos.y] == 0) {
-                mapObjects[posl.x][posl.y] = 0;
-                mapObjects[pos.x][pos.y] = gameObjectFactory.create(GameObjectType::LIGHT_OBJECT, pos.x, pos.y);
-                mapObjects[pos.x][pos.y]->simulate(ttime);
-                movePlayer(ttime);
-                cout << "b";
-            }
-            else {}
-        }
-        else {
-            //player->setPosition(poss);
-            //player->move(MoveDirection::STOP); 
+        else if (mapObjects[targetPos.x][targetPos.y]->getType() == GameObjectType::LIGHT_OBJECT) {
+            pushCube(targetPos, s, deltaTime); // Handle cube pushing
         }
     }
-};
+}
 
-void movePlayer(float ttime) {
-    player->simulate(simulationTime*50);
+
+void movePlayer(const ivec2& targetPos, float deltaTime) {
+    player->simulate(targetPos, deltaTime*10);
+}
+
+void pushCube(const ivec2& targetPos, MoveDirection dir, float deltaTime) {
+    shared_ptr <GameObject> cube = mapObjects [targetPos.x][targetPos.y];
+    ivec2 nextCubePos = targetPos;
+    switch (dir) {
+    case MoveDirection::LEFT: nextCubePos.y++; break;
+    case MoveDirection::RIGHT: nextCubePos.y--; break;
+    case MoveDirection::UP: nextCubePos.x--; break;
+    case MoveDirection::DOWN: nextCubePos.x++; break;
+    }
+
+    if (mapObjects[nextCubePos.x][nextCubePos.y] == nullptr) {
+        cube->setPositionCube(nextCubePos.x, nextCubePos.y);
+        mapObjects[nextCubePos.x][nextCubePos.y] = cube; //Important, re-assign the cube in the map
+        mapObjects[targetPos.x][targetPos.y] = nullptr;
+        // Simulate the movement to a new location.  crucial!
+        cube->simulate(nextCubePos, deltaTime);
+        movePlayer(targetPos, deltaTime);
+        mapObjects[nextCubePos.x][nextCubePos.y] = gameObjectFactory.create(GameObjectType::LIGHT_OBJECT, nextCubePos.x, nextCubePos.y); //place cube
+    }
 }
