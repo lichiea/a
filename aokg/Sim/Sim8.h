@@ -20,4 +20,5 @@ void simulation();
 float getSimulationTime();
 void initializeTiming();
 void gameObjectSimulation(float);
-void movePlayer(float);
+void movePlayer(const ivec2& targetPos, float deltaTime);
+void pushCube(const ivec2& targetPos, MoveDirection dir, float deltaTime);
